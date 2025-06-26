@@ -1,5 +1,7 @@
+// Use a relative path for Three.js, assuming three.min.js is in the js/ folder
 import * as THREE from './three.min.js';
 
+// Define generateImage and attach it to the window object
 function generateImage() {
     const prompt = document.getElementById('image-prompt').value.trim();
     const canvas = document.getElementById('image-canvas');
@@ -35,7 +37,7 @@ function generateImage() {
         hat.position.set(0, 2.5, 0);
         scene.add(hat);
 
-        // Add text (e.g., "Detective Cat")
+        // Add text (e.g., "Detective Cat") using Canvas API
         const ctx = canvas.getContext('2d');
         ctx.font = '20px Courier New';
         ctx.fillStyle = '#00ffcc';
@@ -62,3 +64,6 @@ function generateImage() {
     }
     animate();
 }
+
+// Expose generateImage to the global scope
+window.generateImage = generateImage;
