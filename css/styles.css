@@ -36,6 +36,17 @@ h1 {
     height: 200px;
     overflow-y: auto;
     margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.chat-output h1, .chat-output h2, .chat-output h3 {
+    color: #00ffcc;
+    margin: 10px 0;
+}
+
+.chat-output p {
+    margin: 5px 0;
+    color: #fff;
 }
 
 .db-status {
