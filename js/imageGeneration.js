@@ -1,5 +1,5 @@
 // Use a relative path for Three.js, assuming three.min.js is in the js/ folder
-import * as THREE from './three.min.js';
+import * as THREE from 'https://raw.githubusercontent.com/MyProjectsForRoblox-spec/testai/refs/heads/main/js/three.min.js';
 
 // Define generateImage and attach it to the window object
 function generateImage() {
