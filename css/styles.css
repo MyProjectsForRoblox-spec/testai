@@ -38,6 +38,17 @@ h1 {
     margin-bottom: 10px;
 }
 
+.db-status {
+    background-color: #1e1e1e;
+    border: 1px solid #00ffcc;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #00ffcc;
+    text-align: center;
+}
+
 .chat-input {
     display: flex;
     gap: 10px;
