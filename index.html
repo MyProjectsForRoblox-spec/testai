@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grok-AI: Chat & Image Generation</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Grok-AI: Your Nerdy Companion</h1>
+        <div class="chat-container">
+            <div id="chat-output" class="chat-output"></div>
+            <div class="chat-input">
+                <input type="text" id="user-input" placeholder="Type your message...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+        <div class="image-generation">
+            <h2>Generate an Image</h2>
+            <input type="text" id="image-prompt" placeholder="Describe the image (e.g., 'A cat with a detective hat')">
+            <button onclick="generateImage()">Generate</button>
+            <canvas id="image-canvas"></canvas>
+        </div>
+    </div>
+    <script src="js/three.min.js"></script>
+    <script src="js/chatbot.js"></script>
+    <script src="js/imageGeneration.js"></script>
+</body>
+</html>
