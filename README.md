@@ -8,7 +8,7 @@ A nerdy AI chatbot with basic chatting and advanced image generation, hosted on 
 - **UI**: Clean, coder-centric design with a dark theme and neon accents.
 
 ## Setup
-1. Clone this repository: `git clone https://github.com/your-username/your-repo.git`
+1. Clone this repository: `git clone https://github.com/MyProjectsForRoblox-spec/testai.git`
 2. Ensure all files are in the correct directory structure (see above).
 3. Download `three.min.js` from `https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js` and place it in `js/`.
 4. Download the OpenAI logo from `https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg` and place it in `assets/`.
