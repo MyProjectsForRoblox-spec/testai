@@ -26,17 +26,27 @@ function simulateBotReply(text) {
   return templates[style] || templates["default"];
 }
 
-function fetchFromAPI(userText) {
-  const model = modelSelect.value;
-  switch (model) {
-    case "mock":
-      return simulateBotReply(userText);
-    case "local":
-      return `Pretending to call local model: "${userText}"`;
-    case "api1":
-      return `Mock reply from API #1 for: "${userText}"`;
-    default:
-      return `Model not supported.`;
+async function fetchFromAPI(userText) {
+  const endpoint = "https://api.openai.com/v1/chat/completions";
+  const headers = {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${OPENAI_API_KEY}`
+  };
+  const body = {
+    model: "gpt-3.5-turbo",
+    messages: [{ role: "user", content: userText }]
+  };
+
+  try {
+    const res = await fetch(endpoint, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    return data.choices[0].message.content;
+  } catch (err) {
+    return "⚠️ Error reaching OpenAI API.";
   }
 }
 
