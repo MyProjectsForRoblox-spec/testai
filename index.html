@@ -1,61 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quandale’s AI Copilot</title>
-
-  <!-- Fonts & Style -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mutli-Grump AI Chat</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #1a1a1a;
+      color: #e0e0e0;
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
+    }
+    .sidebar {
+      width: 60px;
+      background-color: #0d0d0d;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+      transition: width 0.3s;
+    }
+    .sidebar:hover {
+      width: 200px;
+    }
+    .sidebar button, .sidebar select {
+      background: none;
+      border: none;
+      color: #e0e0e0;
+      font-size: 16px;
+      padding: 10px;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+    }
+    .sidebar button:hover, .sidebar select:hover {
+      background-color: #333;
+    }
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .header {
+      text-align: center;
+      padding: 20px;
+      background-color: #1a1a1a;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 2em;
+    }
+    .chat-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+    .input-area {
+      padding: 10px;
+      background-color: #2a2a2a;
+      display: flex;
+      gap: 10px;
+    }
+    .input-area input {
+      flex: 1;
+      padding: 10px;
+      background-color: #333;
+      border: none;
+      color: #e0e0e0;
+      border-radius: 5px;
+    }
+    .input-area button {
+      padding: 10px 20px;
+      background-color: #4a90e2;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .input-area button:hover {
+      background-color: #357abd;
+    }
+    .message {
+      margin: 10px 0;
+      padding: 10px;
+      background-color: #333;
+      border-radius: 5px;
+    }
+  </style>
 </head>
 <body>
-  <div class="app-container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <h1>🧠 Copilot</h1>
-
-      <div class="selector">
-        <label for="modelSelect">Model:</label>
-        <select id="modelSelect">
-          <option value="openai">OpenAI (GPT-3.5)</option>
-          <option value="mock">Mock Mode</option>
-        </select>
-      </div>
-
-      <div class="selector">
-        <label for="personalitySelect">Personality:</label>
-        <select id="personalitySelect">
-          <option value="default">Default</option>
-          <option value="sarcastic">Sarcastic</option>
-          <option value="poetic">Poetic</option>
-        </select>
-      </div>
-
-      <div class="sidebar-buttons">
-        <button onclick="clearChat()">🧼 New Chat</button>
-        <button onclick="exportChat()">💾 Export</button>
-        <button onclick="toggleTheme()">🌓 Theme</button>
-        <button onclick="toggleFloating()">📎 Floating</button>
-      </div>
-    </aside>
-
-    <!-- Chat Area -->
-    <main class="chat-container" id="chatContainer">
-      <div class="messages" id="messages"></div>
-      <div class="input-area">
-        <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off" />
-        <button onclick="sendMessage()">➡️</button>
-        <button onclick="toggleVoice()">🎤</button>
-      </div>
-    </main>
+  <div class="sidebar">
+    <button onclick="newChat()">New Chat</button>
+    <select id="language" onchange="updateLanguage()">
+      <option value="en">English</option>
+      <option value="de">German</option>
+      <option value="fr">French</option>
+      <option value="it">Italian</option>
+      <option value="pt">Portuguese</option>
+      <option value="hi">Hindi</option>
+      <option value="es">Spanish</option>
+      <option value="th">Thai</option>
+    </select>
+  </div>
+  <div class="main-content">
+    <div class="header">
+      <h1>Mutli-Grump</h1>
+    </div>
+    <div class="chat-area" id="chatArea">
+      <div class="message">Greetings. I am Mutli-Grump, your multilingual AI assistant, currently operational in English. Please select a language or proceed with your query.</div>
+    </div>
+    <div class="input-area">
+      <input type="text" id="userInput" placeholder="Type your message...">
+      <button onclick="sendMessage()">Send</button>
+    </div>
   </div>
 
-  <!-- OpenAI API key config -->
-  <script src="config.js"></script>
+  <script>
+    let currentLang = 'en';
+    let chatHistory = [];
 
-  <!-- App Core Logic -->
-  <script type="module" src="app.js"></script>
+    const API_KEY = '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';
+
+    async function fetchAIResponse(message) {
+      const proxyUrl = 'https://api.allorigins.win/raw?url=';
+      const apiUrl = 'https://api.openai.com/v1/chat/completions';
+      const fullUrl = proxyUrl + encodeURIComponent(apiUrl);
+      const payload = {
+        model: 'gpt-3.5-turbo',
+        messages: [
+          { role: 'system', content: `You are Mutli-Grump, a multilingual AI assistant with a slightly grumpy tone. Respond in ${currentLang}. Keep answers concise and helpful, with a hint of irritation.` },
+          { role: 'user', content: message }
+        ],
+        max_tokens: 150
+      };
+
+      try {
+        const response = await fetch(fullUrl, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${API_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        return data.choices[0].message.content;
+      } catch (error) {
+        return "Mutli-Grump: Ugh, an error occurred. Check your internet or try again.";
+      }
+    }
+
+    function newChat() {
+      currentLang = document.getElementById('language').value;
+      chatHistory = [];
+      document.getElementById('chatArea').innerHTML = `<div class="message">New chat initialized. Mutli-Grump is now active in ${currentLang}.</div>`;
+    }
+
+    function updateLanguage() {
+      currentLang = document.getElementById('language').value;
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('userInput').value;
+      if (input) {
+        const chatArea = document.getElementById('chatArea');
+        chatArea.innerHTML += `<div class="message">You: ${input}</div>`;
+        chatHistory.push(input.toLowerCase());
+
+        const response = await fetchAIResponse(input);
+        setTimeout(() => {
+          chatArea.innerHTML += `<div class="message">Mutli-Grump: ${response}</div>`;
+          chatArea.scrollTop = chatArea.scrollHeight;
+        }, 500);
+        document.getElementById('userInput').value = '';
+      }
+    }
+
+    document.getElementById('userInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') sendMessage();
+    });
+  </script>
 </body>
 </html>
