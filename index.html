@@ -3,28 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quandale’s AI Chatbot</title>
+  <title>Quandale's Chatbot</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="lib/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
 </head>
 <body>
   <div class="sidebar">
-    <h2>ChatBot</h2>
+    <h2>💬 ChatBot</h2>
     <select id="modelSelect">
       <option value="mock">Mock AI</option>
       <option value="local">Local LLM</option>
       <option value="api1">API #1</option>
     </select>
+
     <select id="personalitySelect">
       <option value="default">Default</option>
       <option value="sarcastic">Sarcastic</option>
       <option value="poetic">Poetic</option>
     </select>
+
     <button onclick="clearChat()">+ New Chat</button>
     <button onclick="exportChat()">⬇ Export</button>
+    <button onclick="toggleTheme()">🌓 Theme</button>
+    <button onclick="toggleFloating()">💠 Toggle Floating</button>
   </div>
 
-  <div class="chat-container">
+  <div class="chat-container" id="chatContainer">
     <div class="messages" id="messages"></div>
     <div class="input-area">
       <input type="text" id="userInput" placeholder="Say something..." />
@@ -34,6 +38,5 @@
   </div>
 
   <script type="module" src="app.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
 </body>
 </html>
