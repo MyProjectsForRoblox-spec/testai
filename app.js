@@ -2,6 +2,7 @@ const messagesDiv = document.getElementById("messages");
 const inputEl = document.getElementById("userInput");
 const modelSelect = document.getElementById("modelSelect");
 const personalitySelect = document.getElementById("personalitySelect");
+const chatContainer = document.getElementById("chatContainer");
 let recognizing = false;
 const synth = window.speechSynthesis;
 
@@ -18,9 +19,9 @@ function addMessage(text, className) {
 function simulateBotReply(text) {
   const style = personalitySelect.value;
   const templates = {
-    default: `Hmm... interesting!`,
-    sarcastic: `Oh wow, totally groundbreaking. 🙄`,
-    poetic: `The stars have whispered your words to me, sweet traveler.`,
+    default: `Got it! What's next?`,
+    sarcastic: `Oh wow, you're so original. 😐`,
+    poetic: `Ah, your words arrive like thunderclouds in bloom.`,
   };
   return templates[style] || templates["default"];
 }
@@ -31,9 +32,9 @@ function fetchFromAPI(userText) {
     case "mock":
       return simulateBotReply(userText);
     case "local":
-      return `Pretending to call a local model: "${userText}"`;
+      return `Pretending to call local model: "${userText}"`;
     case "api1":
-      return `Imagine this was a real API call with response for "${userText}"`;
+      return `Mock reply from API #1 for: "${userText}"`;
     default:
       return `Model not supported.`;
   }
@@ -49,7 +50,7 @@ function sendMessage() {
     removeTypingIndicator();
     const reply = fetchFromAPI(text);
     addMessage(reply, "bot");
-  }, 900);
+  }, 800);
 }
 
 function addTypingIndicator() {
@@ -83,7 +84,7 @@ function exportChat() {
   const blob = new Blob([messagesDiv.innerText], { type: "text/plain" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = "chat-export.txt";
+  link.download = "chat-history.txt";
   link.click();
 }
 
@@ -94,10 +95,9 @@ function speak(text) {
 
 function toggleVoice() {
   if (!('webkitSpeechRecognition' in window)) {
-    alert("Voice recognition not supported in this browser.");
+    alert("Voice recognition not supported.");
     return;
   }
-
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const rec = new SpeechRecognition();
   rec.lang = "en-US";
@@ -108,21 +108,32 @@ function toggleVoice() {
     rec.start();
     recognizing = true;
 
-    rec.onresult = function(event) {
+    rec.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
       inputEl.value = transcript;
       sendMessage();
     };
 
-    rec.onend = () => recognizing = false;
+    rec.onend = () => (recognizing = false);
   } else {
     rec.stop();
     recognizing = false;
   }
 }
 
+function toggleTheme() {
+  document.body.classList.toggle("light");
+}
+
+function toggleFloating() {
+  document.body.classList.toggle("floating");
+}
+
 document.getElementById("userInput").addEventListener("keypress", function (e) {
   if (e.key === "Enter") sendMessage();
 });
+
+window.matchMedia("(prefers-color-scheme: light)").matches &&
+  document.body.classList.add("light");
 
 loadChat();
