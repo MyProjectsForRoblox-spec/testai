@@ -2,21 +2,19 @@ const messagesDiv = document.getElementById("messages");
 const inputEl = document.getElementById("userInput");
 const modelSelect = document.getElementById("modelSelect");
 const personalitySelect = document.getElementById("personalitySelect");
-const chatContainer = document.getElementById("chatContainer");
 let recognizing = false;
-const synth = window.speechSynthesis;
 
-// 💬 Load chat history
+// 💬 Load history
 function loadChat() {
   messagesDiv.innerHTML = localStorage.getItem("chatLog") || "";
 }
 
-// 💾 Save chat history
+// 💾 Save chat
 function saveChat() {
   localStorage.setItem("chatLog", messagesDiv.innerHTML);
 }
 
-// 🧠 Add message to chat
+// 💭 Add message
 function addMessage(text, className) {
   const msg = document.createElement("div");
   msg.className = `message ${className}`;
@@ -27,39 +25,40 @@ function addMessage(text, className) {
   if (className === "bot") speak(text);
 }
 
-// ✍️ Typing indicator
-function addTypingIndicator() {
+// ✍️ Typing animation
+function addTyping() {
   const typing = document.createElement("div");
-  typing.className = "message bot";
   typing.id = "typing";
+  typing.className = "message bot";
   typing.textContent = "Typing...";
   messagesDiv.appendChild(typing);
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
-function removeTypingIndicator() {
-  const typing = document.getElementById("typing");
-  if (typing) typing.remove();
+function removeTyping() {
+  const t = document.getElementById("typing");
+  if (t) t.remove();
 }
 
-// 🧠 Prompt personality wrapper
-function getPersonalityPrefix() {
-  const tone = personalitySelect.value;
-  switch (tone) {
-    case "sarcastic":
-      return "Respond sarcastically:";
-    case "poetic":
-      return "Respond like a poetic storyteller:";
-    default:
-      return "";
-  }
+// 🎭 Personality prompt
+function getSystemPrompt() {
+  const style = personalitySelect.value;
+  if (style === "sarcastic") return "Respond sarcastically.";
+  if (style === "poetic") return "Respond with poetic, metaphorical language.";
+  return null;
 }
 
+// 🤖 OpenAI call
 async function fetchFromAPI(userText) {
-  const promptPrefix = getPersonalityPrefix();
-  const messages = [
-    ...(promptPrefix ? [{ role: "system", content: promptPrefix }] : []),
-    { role: "user", content: userText }
-  ];
+  const model = modelSelect.value;
+
+  if (model === "mock") {
+    return "🌐 This is a mock response. Replace with real API.";
+  }
+
+  const messages = [];
+  const sysPrompt = getSystemPrompt();
+  if (sysPrompt) messages.push({ role: "system", content: sysPrompt });
+  messages.push({ role: "user", content: userText });
 
   try {
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -76,104 +75,104 @@ async function fetchFromAPI(userText) {
 
     const data = await res.json();
 
-    if (data.choices && data.choices[0]?.message?.content) {
+    if (data.choices?.[0]?.message?.content) {
       return data.choices[0].message.content;
     } else if (data.error?.message) {
       return `⚠️ OpenAI Error: ${data.error.message}`;
     } else {
       return "⚠️ Unexpected response format.";
     }
-
-  } catch (error) {
-    return `❌ API Request Failed: ${error.message}`;
+  } catch (err) {
+    return `❌ API Request Failed: ${err.message}`;
   }
 }
 
-
-// 🚀 Send message
+// 🧠 Send message
 function sendMessage() {
   const text = inputEl.value.trim();
   if (!text) return;
-
   addMessage(text, "user");
   inputEl.value = "";
-  addTypingIndicator();
+  addTyping();
 
   setTimeout(async () => {
     const reply = await fetchFromAPI(text);
-    removeTypingIndicator();
+    removeTyping();
     addMessage(reply, "bot");
-  }, 600);
+  }, 400);
 }
 
-// 🎙 Speech synthesis
-function speak(text) {
-  const utter = new SpeechSynthesisUtterance(text);
-  synth.cancel();
-  synth.speak(utter);
+// 🧹 New chat
+function clearChat() {
+  messagesDiv.innerHTML = "";
+  localStorage.removeItem("chatLog");
+}
+
+// 📄 Export
+function exportChat() {
+  const blob = new Blob([messagesDiv.innerText], { type: "text/plain" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "chat-history.txt";
+  a.click();
 }
 
 // 🎤 Voice input
 function toggleVoice() {
   if (!("webkitSpeechRecognition" in window)) {
-    alert("Speech recognition not supported.");
+    alert("Speech input not supported.");
     return;
   }
 
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const rec = new SpeechRecognition();
+  const rec = new webkitSpeechRecognition();
   rec.lang = "en-US";
   rec.continuous = false;
   rec.interimResults = false;
 
+  rec.onresult = (e) => {
+    const transcript = e.results[0][0].transcript;
+    inputEl.value = transcript;
+    sendMessage();
+  };
+
+  rec.onerror = () => (recognizing = false);
+  rec.onend = () => (recognizing = false);
+
   if (!recognizing) {
     rec.start();
     recognizing = true;
-
-    rec.onresult = function (event) {
-      const transcript = event.results[0][0].transcript;
-      inputEl.value = transcript;
-      sendMessage();
-    };
-    rec.onend = () => (recognizing = false);
   } else {
     rec.stop();
     recognizing = false;
   }
 }
 
-// 🎨 Theme toggling
+// 📢 Read reply aloud
+function speak(text) {
+  const synth = window.speechSynthesis;
+  synth.cancel();
+  synth.speak(new SpeechSynthesisUtterance(text));
+}
+
+// 🌗 Theme toggle
 function toggleTheme() {
   document.body.classList.toggle("light");
 }
 
-// 🧊 Floating chat mode
+// 📦 Floating mode toggle
 function toggleFloating() {
   document.body.classList.toggle("floating");
 }
 
-// 🗑 Clear chat history
-function clearChat() {
-  messagesDiv.innerHTML = "";
-  localStorage.removeItem("chatLog");
-}
-
-// 📤 Export chat as .txt
-function exportChat() {
-  const blob = new Blob([messagesDiv.innerText], { type: "text/plain" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "chat-history.txt";
-  link.click();
-}
-
-// 🧠 Init
-document.getElementById("userInput").addEventListener("keypress", function (e) {
+// ⌨️ Send on Enter
+inputEl.addEventListener("keypress", function (e) {
   if (e.key === "Enter") sendMessage();
 });
 
-if (window.matchMedia("(prefers-color-scheme: light)").matches) {
-  document.body.classList.add("light");
-}
-
-loadChat();
+// Load chat + auto-theme
+window.onload = () => {
+  loadChat();
+  if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+    document.body.classList.add("light");
+  }
+};
