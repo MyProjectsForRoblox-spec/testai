@@ -3,45 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quandale's Copilot Chatbot</title>
+  <title>Quandale’s AI Copilot</title>
+
+  <!-- Fonts & Style -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
 </head>
 <body>
-  <div class="sidebar">
-    <h2>💬 ChatBot</h2>
-    <select id="modelSelect">
-      <option value="openai">OpenAI (GPT-3.5)</option>
-      <option value="mock">Mock Reply</option>
-    </select>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h1>🧠 Copilot</h1>
 
-    <select id="personalitySelect">
-      <option value="default">Default</option>
-      <option value="sarcastic">Sarcastic</option>
-      <option value="poetic">Poetic</option>
-    </select>
+      <div class="selector">
+        <label for="modelSelect">Model:</label>
+        <select id="modelSelect">
+          <option value="openai">OpenAI (GPT-3.5)</option>
+          <option value="mock">Mock Mode</option>
+        </select>
+      </div>
 
-    <button onclick="clearChat()">+ New Chat</button>
-    <button onclick="exportChat()">⬇ Export</button>
-    <button onclick="toggleTheme()">🌓 Theme</button>
-    <button onclick="toggleFloating()">💠 Floating</button>
+      <div class="selector">
+        <label for="personalitySelect">Personality:</label>
+        <select id="personalitySelect">
+          <option value="default">Default</option>
+          <option value="sarcastic">Sarcastic</option>
+          <option value="poetic">Poetic</option>
+        </select>
+      </div>
+
+      <div class="sidebar-buttons">
+        <button onclick="clearChat()">🧼 New Chat</button>
+        <button onclick="exportChat()">💾 Export</button>
+        <button onclick="toggleTheme()">🌓 Theme</button>
+        <button onclick="toggleFloating()">📎 Floating</button>
+      </div>
+    </aside>
+
+    <!-- Chat Area -->
+    <main class="chat-container" id="chatContainer">
+      <div class="messages" id="messages"></div>
+      <div class="input-area">
+        <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off" />
+        <button onclick="sendMessage()">➡️</button>
+        <button onclick="toggleVoice()">🎤</button>
+      </div>
+    </main>
   </div>
 
-  <div class="chat-container" id="chatContainer">
-    <div class="messages" id="messages"></div>
-    <div class="input-area">
-      <input type="text" id="userInput" placeholder="Say something..." />
-      <button onclick="sendMessage()">Send</button>
-      <button onclick="toggleVoice()">🎤</button>
-    </div>
-  </div>
-
-  <!-- Config holds your OpenAI key -->
+  <!-- OpenAI API key config -->
   <script src="config.js"></script>
-  <!-- Core app logic -->
+
+  <!-- App Core Logic -->
   <script type="module" src="app.js"></script>
 </body>
 </html>
