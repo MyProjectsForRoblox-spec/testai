@@ -54,7 +54,6 @@ function getPersonalityPrefix() {
   }
 }
 
-// 🧠 OpenAI API call using your key
 async function fetchFromAPI(userText) {
   const promptPrefix = getPersonalityPrefix();
   const messages = [
@@ -76,11 +75,20 @@ async function fetchFromAPI(userText) {
     });
 
     const data = await res.json();
-    return data.choices?.[0]?.message?.content || "❌ Error parsing response.";
+
+    if (data.choices && data.choices[0]?.message?.content) {
+      return data.choices[0].message.content;
+    } else if (data.error?.message) {
+      return `⚠️ OpenAI Error: ${data.error.message}`;
+    } else {
+      return "⚠️ Unexpected response format.";
+    }
+
   } catch (error) {
-    return "⚠️ Failed to reach OpenAI API.";
+    return `❌ API Request Failed: ${error.message}`;
   }
 }
+
 
 // 🚀 Send message
 function sendMessage() {
