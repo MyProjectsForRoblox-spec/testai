@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quandale's Chatbot</title>
+  <title>Quandale's Copilot Chatbot</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
 </head>
 <body>
   <div class="sidebar">
     <h2>💬 ChatBot</h2>
     <select id="modelSelect">
-      <option value="mock">Mock AI</option>
-      <option value="local">Local LLM</option>
-      <option value="api1">API #1</option>
+      <option value="openai">OpenAI (GPT-3.5)</option>
+      <option value="mock">Mock Reply</option>
     </select>
 
     <select id="personalitySelect">
@@ -25,7 +27,7 @@
     <button onclick="clearChat()">+ New Chat</button>
     <button onclick="exportChat()">⬇ Export</button>
     <button onclick="toggleTheme()">🌓 Theme</button>
-    <button onclick="toggleFloating()">💠 Toggle Floating</button>
+    <button onclick="toggleFloating()">💠 Floating</button>
   </div>
 
   <div class="chat-container" id="chatContainer">
@@ -37,6 +39,9 @@
     </div>
   </div>
 
+  <!-- Config holds your OpenAI key -->
+  <script src="config.js"></script>
+  <!-- Core app logic -->
   <script type="module" src="app.js"></script>
 </body>
 </html>
