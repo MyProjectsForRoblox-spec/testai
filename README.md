@@ -1,42 +1,35 @@
-# Grok-AI: Chat & Image Generation
-**A nerdy, human-like chatbot with Markdown support and image generation, hosted on GitHub Pages.
-Features**
+# Quandale's Copilot-Inspired Chatbot
 
-*Chatbot:* **Processes every letter of input, builds a word database, and responds in a casual, coder-friendly tone using Markdown formatting (e.g., # Yo!). Prepares for future support of Lua, Luau, and C#.
-Image Generation: Simulates advanced image generation with Three.js and HTML overlays (e.g., "cat with a detective hat").
-UI: Dark theme with neon accents, Markdown-rendered chat output.**
+A sleek, client-side AI chatbot UI with multi-model support, voice input/output, markdown rendering, and memory simulation. Built for GitHub Pages deployment.
 
-# Setup
+## 🚀 Features
+- Multi-API model selector (mock/local/API-ready)
+- Personality modes (sarcastic, poetic, default)
+- Voice input and speech synthesis
+- Markdown rendering with `marked.js`
+- Chat memory via localStorage
+- Export chat history as `.txt`
+- Typing animation and clean UI
 
-**Clone this repository: git clone https://github.com/your-username/testai.git**
-**Ensure all files are in the correct directory structure.**
-**Download three.min.js from https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js and place it in js/.**
-**Download marked.min.js from https://cdn.jsdelivr.net/npm/marked/marked.min.js and place it in js/.**
-**Download the OpenAI logo from https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg and place it in assets/.**
-**Push to GitHub: git push origin main.**
-**Enable GitHub Pages (Settings > Pages > Source: Deploy from a branch > Branch: main > Save).**
-**Access your site at https://your-username.github.io/testai.**
+## 🛠 Setup
+1. Clone or download the repo.
+2. Open `index.html` in your browser.
+3. Or deploy to GitHub Pages via repo settings.
 
-# Troubleshooting
+## 📁 File Structure
+- `index.html` – Main UI
+- `style.css` – Styling
+- `app.js` – Chat logic
+- `lib/marked.min.js` – Markdown parser
+- `README.md` – This file
 
-**Error: Uncaught ReferenceError: generateImage is not defined:**
-**Ensure imageGeneration.js includes window.generateImage = generateImage;.**
-**Verify js/imageGeneration.js is loaded in index.html.**
+## 📦 Deployment
+To deploy on GitHub Pages:
+1. Push to a public repo.
+2. Go to Settings > Pages.
+3. Set source to `main` branch and `/root`.
+4. Done! Your chatbot is live.
 
+---
 
-**Error: Content unavailable. Resource was not cached:**
-**Check that all files (css/styles.css, js/three.min.js, js/marked.min.js, js/chatbot.js, js/imageGeneration.js, assets/openai-logo.svg) are present.**
-**Verify file paths in index.html.**
-**Trigger a redeploy: git commit -m "Trigger redeploy" && git push.**
-**Check browser Network tab for 404 errors.**
-
-
-**Markdown Not Rendering:**
-**Ensure marked.min.js is loaded before chatbot.js.**
-
-
-
-# Usage
-
-*Chat:* **Type "hi" for a greeting or any message to build the database and get a human-like, Markdown-formatted response.
-Image Generation: Enter a prompt like "cat with a detective hat" and click "Generate" for a 3D rendering.**
+Built with 💬 by Quandale + Copilot
