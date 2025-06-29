@@ -1,32 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grok-AI: Chat & Image Generation</title>
-    <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quandale’s AI Chatbot</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="lib/marked.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Grok-AI: Your Nerdy Companion</h1>
-        <div class="chat-container">
-            <div id="chat-output" class="chat-output"></div>
-            <div id="db-status" class="db-status">Database: Ready</div>
-            <div class="chat-input">
-                <input type="text" id="user-input" placeholder="Type your message...">
-                <button onclick="sendMessage()">Send</button>
-            </div>
-        </div>
-        <div class="image-generation">
-            <h2>Generate an Image</h2>
-            <input type="text" id="image-prompt" placeholder="Describe the image (e.g., 'A cat with a detective hat')">
-            <button onclick="generateImage()">Generate</button>
-            <canvas id="image-canvas"></canvas>
-        </div>
+  <div class="sidebar">
+    <h2>ChatBot</h2>
+    <select id="modelSelect">
+      <option value="mock">Mock AI</option>
+      <option value="local">Local LLM</option>
+      <option value="api1">API #1</option>
+    </select>
+    <select id="personalitySelect">
+      <option value="default">Default</option>
+      <option value="sarcastic">Sarcastic</option>
+      <option value="poetic">Poetic</option>
+    </select>
+    <button onclick="clearChat()">+ New Chat</button>
+    <button onclick="exportChat()">⬇ Export</button>
+  </div>
+
+  <div class="chat-container">
+    <div class="messages" id="messages"></div>
+    <div class="input-area">
+      <input type="text" id="userInput" placeholder="Say something..." />
+      <button onclick="sendMessage()">Send</button>
+      <button onclick="toggleVoice()">🎤</button>
     </div>
-    <script src="js/marked.min.js"></script>
-    <script src="js/three.min.js"></script>
-    <script src="js/chatbot.js"></script>
-    <script src="js/imageGeneration.js"></script>
+  </div>
+
+  <script type="module" src="app.js"></script>
 </body>
 </html>
